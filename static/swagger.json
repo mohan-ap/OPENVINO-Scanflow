@@ -1,0 +1,536 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Scanflow"
+  },
+  "tags": [
+    {
+      "name": "Scanflow API",
+      "description": "Test API"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "required": ["username", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing username or password / Username already exists",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "User login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "required": ["username", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing username or password",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },    
+    "/files": {
+      "post": {
+        "summary": "Get a list of user files",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                }
+              },
+              "required": ["username"]
+            }
+          }
+        ],
+    
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "file_name": {
+                            "type": "string"
+                          },
+                          "file_id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+      "/upload_file": {
+        "post": {
+          "summary": "Upload a file",
+          "consumes": ["multipart/form-data"],
+          "parameters": [
+            {
+              "name": "pdf",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "PDF file to upload have to give key as 'pdf' in front end",
+              "x-name": "pdf" 
+            },          
+              {
+                "name": "username",
+                "in": "formData",
+                "required": true,
+                "type": "string",
+                "description": "Username associated with the file (Key: 'username' in the frontend)"
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "File uploaded successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "file_name": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Empty file",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+         "/upload_file_OCR": {
+        "post": {
+          "summary": "Upload a file",
+          "consumes": ["multipart/form-data"],
+          "parameters": [
+            {
+              "name": "pdf",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "PDF file to upload have to give key as 'pdf' in front end",
+              "x-name": "pdf" 
+            },
+            {
+              "name": "username",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": "Username associated with the file (Key: 'username' in the frontend)"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File uploaded successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "file_name": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Empty file",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/upload_file_Openvino": {
+        "post": {
+          "summary": "Upload a file",
+          "consumes": ["multipart/form-data"],
+          "parameters": [
+            {
+              "name": "pdf",
+              "in": "formData",
+              "required": true,
+              "type": "file",
+              "description": "PDF file to upload have to give key as 'pdf' in front end",
+              "x-name": "pdf" 
+            },
+            {
+              "name": "username",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": "Username associated with the file (Key: 'username' in the frontend)"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File uploaded successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "file_name": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Empty file",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/question": {
+        "post": {
+          "summary": "Ask a question",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  },
+                  "question": {
+                    "type": "string"
+                  }
+
+                },
+                "required": ["username","file_id","question"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string"
+                  },
+                  "answer": {
+                    "type": "string"
+                  },
+                  "chat_history": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "File not found",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/history": {
+        "post": {
+          "summary": "Conversation history",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                },
+                "required": ["username"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "file_name": {
+                          "type": "string"
+                        },
+                        "question": {
+                          "type": "string"
+                        },
+                        "answer": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Error response",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+    }
+  }
+ 
+
+
